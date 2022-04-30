@@ -13,7 +13,7 @@ You have been provided a capture of data en route to the listening post as well 
 Enter the IP addresses associated with the DIB that have communicated with the LP, one per line: 
 ```
 ```
-
+_____________________________________________________________________________________________________________
 
 2 files were provided, a Wireshark file (capture.pcap) and a list of approved DIB IP ranges (ip_ranges.txt). In summary, the goal is to find unauthorized IP addresses that do not match the approved ranges, and report them.
 
@@ -95,6 +95,9 @@ Prompt: NSA notified FBI, which notified the potentially-compromised DIB Compani
 OOPS is a cloud containerization provider that acts as a one-stop shop for hosting and launching all sorts of containers -- rkt, Docker, Hyper-V, and more. They have provided us with logs from their network proxy and domain controller that coincide with the time that their traffic to the cyber actor's listening post was captured.
 
 Identify the logon ID of the user session that communicated with the malicious LP (i.e.: on the machine that sent the beacon and active at the time the beacon was sent).
+```
+```
+________________________________________________________________________________________________________________________
 
 2 files were provided, oops_subnet.txt providing the subnet for OOPS, proxy.log, and logins.json.
 
@@ -169,6 +172,7 @@ Identify the message ID of the malicious email and the targeted server.
 Enter the domain name of the server that the malicious payload sends a POST request to
 ```
 ```
+_____________________________________________________________________________________________________________
 
 1 file was provided, a zip folder of emails. 
 

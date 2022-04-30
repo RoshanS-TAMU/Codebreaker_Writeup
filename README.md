@@ -25,7 +25,10 @@ for j in ranges:
 print(output)
 ```
 Which yielded this output when run:
+![image](https://media.github.tamu.edu/user/17583/files/83a6db80-c81d-11ec-816e-d9560e514fd1)
 
+Search those IP addresses in Wireshark:
+![image](https://media.github.tamu.edu/user/17583/files/121b5d00-c81e-11ec-9aa1-ff8d3900391f)
 
 
 

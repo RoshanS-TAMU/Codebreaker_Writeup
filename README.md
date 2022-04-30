@@ -100,19 +100,63 @@ Identify the logon ID of the user session that communicated with the malicious L
 
 As established in task 1, the listening post is 172.23.251.63. Using the command line to search through proxy.log, I found exactly one instance of activity from this user:
 ```
-linux command
+> cat proxy.log | grep '172.23.251.63'
+
+2021-03-16 08:00:09 39 10.227.229.227 200 TCP_MISS 12734 479 GET http worsc.invalid activity - - DIRECT 172.23.251.63 application/octet-stream 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322)' PROXIED none - 10.227.228.175 SG-HTTP-Service - none -
+
 ```
 We now know that this user was active at 08:00:09. Now the task is to find the session ID of the malicious user in logins.json. To find this, I ran a python script to parse through the logins.json file and return the session of the user whose IP matched the LP and who logged in before 00:08:09 and logged out afterward.
 
 ```
-Python Script
+# Some lines left as comments were used in debugging
+import json
+import datetime
+from datetimerange import DateTimeRange
+from dateutil.parser import*
+from dateutil import*
+#Read data from json file
+file1 = open("logins.json")
+data = []
+for line in file1:
+	data.append(json.loads(line))
+logins = {}
+suskey = ""
+#Parse the json file into readable input
+for x in data:
+	if "ServiceSid" not in x["PayloadData3"]:
+		loginID = x["PayloadData3"].replace("LogonId: ", "")
+		if loginID not in logins:
+			logins[loginID] = [""]*2
+		if "Successful logon" in x["MapDescription"]:
+			logins[loginID][0] = x["TimeCreated"].replace("T"," ").strip("+00:00")
+		if "An account was logged off" in x["MapDescription"]:
+			logins[loginID][1] = x["TimeCreated"].replace("T"," ").strip("+00:00")
+count = 0
+#Find the sessions that occurred during the specified time and print their session ID
+for key in logins:
+	time = parse("2021-03-16 08:00:09")
+	#print(str(logins[key][0]), str(logins[key][1]))
+	start = parse(logins[key][0])
+	end = parse(logins[key][1])
+	#print(logins[key][0])
+	#str(time.timestamp()) <= str(end.timestamp())
+	if time.timestamp() >= start.timestamp() and time.timestamp() <=end.timestamp():
+		print(key, logins[key][0], logins[key][1])
+		count += 1
+print(str(time.timestamp()))
+print(count)
 ```
 
 Unfortunately, despite my attempts to debug the code, there did not seem to be a match. When I modified the script to return the total number of sessions, and the total which matched my criteria, my script returned 0 for the latter.
 
 ```
-Terminal Output
+> python3 logparser.py
+
+1615899609.0
+0
+
 ```
+In theory, there should have been exactly one session that matched both the IP of the listening post and the timeframe of the activity shown in the log, which would be our solution.
 
 # Task 3
 

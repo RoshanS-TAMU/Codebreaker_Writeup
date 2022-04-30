@@ -159,6 +159,29 @@ Unfortunately, despite my attempts to debug the code, there did not seem to be a
 In theory, there should have been exactly one session that matched both the IP of the listening post and the timeframe of the activity shown in the log, which would be our solution.
 
 # Task 3
+With the provided information, OOPS was quickly able to identify the employee associated with the account. During the incident response interview, the user mentioned that they would have been checking email around the time that the communication occurred. They don't remember anything particularly weird from earlier, but it was a few weeks back, so they're not sure. OOPS has provided a subset of the user's inbox from the day of the communication.
 
+Identify the message ID of the malicious email and the targeted server.
+```
+```
+Enter the domain name of the server that the malicious payload sends a POST request to
+```
+```
 
+1 file was provided, a zip folder of emails. 
+
+To identify the malicious email, I used the online tool Encryptomatic Email Viewer (www.encryptomatic.com/viewer) to view each email file, and viewed each attachment. On email 4, we have an image file called puppy.jpg.
+![image](https://media.github.tamu.edu/user/17583/files/b6100300-c834-11ec-97d0-3e10e9da0d61)
+
+When I opened the file with the default jpeg viewer, the system threw an error. However, when I opened it with the text editor, I was met with an encrypted PowerShell script:
+```
+Powershell orig
+```
+This looks like Base64, so I copied the output of the jpeg file to a text document, and converted that from Base64:
+
+```
+> base64 -d puppy.txt
+
+```
+This PowerShell script seems to be the malicious file. Therefore 
 

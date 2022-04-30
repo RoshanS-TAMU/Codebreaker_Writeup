@@ -1,4 +1,4 @@
-# CodebreakerWriteups
+# NSA Codebreaker Challenge 2021 Writeup
 Writeups for 3 tasks of the NSA Codebreaker Challenge
 
 The NSA Codebreaker Challenge is an annual cybersecurity competition hosted by the National Security Agency. The competition is designed to mirror real-world challenges that NSA professionals work to solve. This year, 6 challenges were set up in increasing difficulty and requiring a variety of different techniques to solve. An additional 4 solo challenges were available once the first 6 were complete. No collaboration between contestants is allowed on solo challenges. 

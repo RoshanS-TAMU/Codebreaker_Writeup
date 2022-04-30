@@ -1,9 +1,19 @@
 # CodebreakerWriteups
 Writeups for 3 tasks of the NSA Codebreaker Challenge
 
-The NSA Codebreaker Challenge is an annual cybersecurity competition hosted by the National Security Agency. The competition is designed to mirror real-world challenges that NSA professionals work to solve. This year, 
+The NSA Codebreaker Challenge is an annual cybersecurity competition hosted by the National Security Agency. The competition is designed to mirror real-world challenges that NSA professionals work to solve. This year, 6 challenges were set up in increasing difficulty and requiring a variety of different techniques to solve. An additional 4 solo challenges were available once the first 6 were complete. No collaboration between contestants is allowed on solo challenges. 
+This will be a brief walkthrough of my solutions to the first 3 challenges.
 
 # Task 1
+Topics: Network Analysis, Forensics
+
+Prompt: The NSA Cybersecurity Collaboration Center has a mission to prevent and eradicate threats to the US Defense Industrial Base (DIB). Based on information sharing agreements with several DIB companies, we need to determine if any of those companies are communicating with the actor's infrastructure.
+
+You have been provided a capture of data en route to the listening post as well as a list of DIB company IP ranges. Identify any IPs associated with the DIB that have communicated with the LP.
+Enter the IP addresses associated with the DIB that have communicated with the LP, one per line: 
+```
+```
+
 
 2 files were provided, a Wireshark file (capture.pcap) and a list of approved DIB IP ranges (ip_ranges.txt). In summary, the goal is to find unauthorized IP addresses that do not match the approved ranges, and report them.
 
@@ -74,7 +84,16 @@ for i in unauth:
 	print(i)
 		
 ```
-We now have our list:
+After running this script in the terminal, we now have our solution:
+![image](https://media.github.tamu.edu/user/17583/files/5827ef00-c825-11ec-994c-b980be592fd2)
+
+
+#Task 2
+Prompt: NSA notified FBI, which notified the potentially-compromised DIB Companies. The companies reported the compromise to the Defense Cyber Crime Center (DC3). One of them, Online Operations and Production Services (OOPS) requested FBI assistance. At the request of the FBI, we've agreed to partner with them in order to continue the investigation and understand the compromise.
+
+OOPS is a cloud containerization provider that acts as a one-stop shop for hosting and launching all sorts of containers -- rkt, Docker, Hyper-V, and more. They have provided us with logs from their network proxy and domain controller that coincide with the time that their traffic to the cyber actor's listening post was captured.
+
+Identify the logon ID of the user session that communicated with the malicious LP (i.e.: on the machine that sent the beacon and active at the time the beacon was sent).
 
 
 

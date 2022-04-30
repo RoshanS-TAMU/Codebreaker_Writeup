@@ -88,7 +88,7 @@ After running this script in the terminal, we now have our solution:
 ![image](https://media.github.tamu.edu/user/17583/files/5827ef00-c825-11ec-994c-b980be592fd2)
 
 
-#Task 2
+# Task 2
 
 Prompt: NSA notified FBI, which notified the potentially-compromised DIB Companies. The companies reported the compromise to the Defense Cyber Crime Center (DC3). One of them, Online Operations and Production Services (OOPS) requested FBI assistance. At the request of the FBI, we've agreed to partner with them in order to continue the investigation and understand the compromise.
 
@@ -96,7 +96,25 @@ OOPS is a cloud containerization provider that acts as a one-stop shop for hosti
 
 Identify the logon ID of the user session that communicated with the malicious LP (i.e.: on the machine that sent the beacon and active at the time the beacon was sent).
 
+2 files were provided, oops_subnet.txt providing the subnet for OOPS, proxy.log, and logins.json.
 
+As established in task 1, the listening post is 172.23.251.63. Using the command line to search through proxy.log, I found exactly one instance of activity from this user:
+```
+linux command
+```
+We now know that this user was active at 08:00:09. Now the task is to find the session ID of the malicious user in logins.json. To find this, I ran a python script to parse through the logins.json file and return the session of the user whose IP matched the LP and who logged in before 00:08:09 and logged out afterward.
+
+```
+Python Script
+```
+
+Unfortunately, despite my attempts to debug the code, there did not seem to be a match. When I modified the script to return the total number of sessions, and the total which matched my criteria, my script returned 0 for the latter.
+
+```
+Terminal Output
+```
+
+# Task 3
 
 
 

